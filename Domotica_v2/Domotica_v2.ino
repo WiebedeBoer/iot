@@ -58,6 +58,8 @@ int ethPort = 3300;                                  // Take a free port (check 
 #define ledPin       8  // output, led used for "connect state": blinking = searching; continuously = connected
 #define infoPin      9  // output, more information
 #define analogPin    0  // sensor value
+#define trigPin      8  // output, more information
+#define echoPin      9  // sensor value
 
 EthernetServer server(ethPort);              // EthernetServer instance (listening on port <ethPort>).
 NewRemoteTransmitter apa3Transmitter(unitCodeApa3, RFPin, 260, 3);  // APA3 (Gamma) remote, use pin <RFPin> 
@@ -172,12 +174,39 @@ void loop()
 }
 
 
-void readSensors(){
-  Serial.println("sensor red");
-      sensorValue = readSensor(0, 1023);         // update sensor value
-      sensorValue2 = readSensor2(0, 1023);         // update sensor value
+//LDR en Ultrasone Sensor
+void readSensors(){ 
+Serial.println("sensor red");
+      sensorValue = readSensor(0, 100);         // update sensor value
+      sensorValue2 = readSensor2(0, 100);         // update sensor value
       timer.setTimeout(sensorReadInterval, readSensors);
-      Serial.println("sensor red");
+
+  
+sensorValue = analogRead(analogPin); // read the value from the sensor
+
+
+   long duration, distance;
+  digitalWrite(trigPin, LOW);  // Added this line
+  delayMicroseconds(2); // Added this line
+  digitalWrite(trigPin, HIGH);
+//  delayMicroseconds(1000); - Removed this line
+  delayMicroseconds(10); // Added this line
+  digitalWrite(trigPin, LOW);
+  duration = pulseIn(echoPin, HIGH);
+  distance = (duration/2) / 29.1;
+
+  if (distance >= 200 || distance <= 0){
+    Serial.println("Out of range");
+    distance = 200;
+  }
+  else {
+    Serial.print(distance);
+    Serial.println(" cm");
+  }
+
+    sensorValue2 = distance;
+
+  
 }
 
 // Choose and switch your Kaku device, state is true/false (HIGH/LOW)
