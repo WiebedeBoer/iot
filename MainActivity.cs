@@ -60,8 +60,9 @@ namespace Domotica
         Button off1;
         Button off2;
         TextView textViewServerConnect, textViewTimerStateValue;
-        public TextView textViewChangePinStateValue, textViewSensorValue, textViewDebugValue;
-        EditText editTextIPAddress, editTextIPPort;
+        public TextView textViewChangePinStateValue, textViewSensorValue, textViewDebugValue, SignalSensor1, SignalSensor2;
+        //EditText editTextIPAddress, editTextIPPort, editTextMeetsnelheid, editTextMeetsnelheid2;
+        EditText editTextIPAddress, editTextIPPort, editTextMeetsnelheid;
 
         Timer timerClock, timerSockets;             // Timers   
         Socket socket = null;                       // Socket   
@@ -91,12 +92,43 @@ namespace Domotica
             textViewDebugValue = FindViewById<TextView>(Resource.Id.textViewDebugValue);
             editTextIPAddress = FindViewById<EditText>(Resource.Id.editTextIPAddress);
             editTextIPPort = FindViewById<EditText>(Resource.Id.editTextIPPort);
+            SignalSensor1 = FindViewById<TextView>(Resource.Id.SignalSensor1);
+            SignalSensor2 = FindViewById<TextView>(Resource.Id.SignalSensor2);
+            editTextMeetsnelheid = FindViewById<EditText>(Resource.Id.editTextMeetsnelheid);
+            //editTextMeetsnelheid2 = FindViewById<EditText>(Resource.Id.editTextMeetsnelheid2);
+
+            editTextMeetsnelheid.AfterTextChanged += EditTextMeetsnelheid_AfterTextChanged;
+            //editTextMeetsnelheid2.AfterTextChanged += EditTextMeetsnelheid2_AfterTextChanged;
 
             UpdateConnectionState(4, "Disconnected");
 
             // Init commandlist, scheduled by socket timer
             commandList.Add(new Tuple<string, TextView>("s", textViewChangePinStateValue));
-            commandList.Add(new Tuple<string, TextView>("a", textViewSensorValue));
+
+            commandList.Add(new Tuple<string, TextView>("a", SignalSensor1));
+            /*
+            commandList.Add(new Tuple<string, TextView>("b", SignalSensor1));
+            commandList.Add(new Tuple<string, TextView>("c", SignalSensor1));
+            commandList.Add(new Tuple<string, TextView>("d", SignalSensor1));
+            commandList.Add(new Tuple<string, TextView>("e", SignalSensor1));
+            commandList.Add(new Tuple<string, TextView>("f", SignalSensor1));
+            commandList.Add(new Tuple<string, TextView>("g", SignalSensor1));
+            commandList.Add(new Tuple<string, TextView>("h", SignalSensor1));
+            commandList.Add(new Tuple<string, TextView>("j", SignalSensor1));
+            commandList.Add(new Tuple<string, TextView>("k", SignalSensor1));
+            */
+            commandList.Add(new Tuple<string, TextView>("l", SignalSensor2));
+            /*
+            commandList.Add(new Tuple<string, TextView>("m", SignalSensor2));
+            commandList.Add(new Tuple<string, TextView>("n", SignalSensor2));
+            commandList.Add(new Tuple<string, TextView>("o", SignalSensor2));
+            commandList.Add(new Tuple<string, TextView>("p", SignalSensor2));
+            commandList.Add(new Tuple<string, TextView>("q", SignalSensor2));
+            commandList.Add(new Tuple<string, TextView>("r", SignalSensor2));
+            commandList.Add(new Tuple<string, TextView>("w", SignalSensor2));
+            commandList.Add(new Tuple<string, TextView>("x", SignalSensor2));
+            commandList.Add(new Tuple<string, TextView>("y", SignalSensor2));
+            */
 
             this.Title = this.Title + " (timer sockets)";
 
@@ -197,6 +229,116 @@ namespace Domotica
 
         }
 
+        //meetsnelheid sensor 1
+        private void EditTextMeetsnelheid_AfterTextChanged(object sender, Android.Text.AfterTextChangedEventArgs e)
+        {
+            // editTextMeetsnelheid.Text
+            string command ="";
+            string command2 = "";
+            if (editTextMeetsnelheid.Text == "1") {
+                command = "a";
+                command2 = "l";
+            }
+            else if (editTextMeetsnelheid.Text == "2")
+            {
+                command = "b";
+                command2 = "m";
+            }
+            else if (editTextMeetsnelheid.Text == "3")
+            {
+                command = "c";
+                command2 = "n";
+            }
+            else if (editTextMeetsnelheid.Text == "4")
+            {
+                command = "d";
+                command2 = "o";
+            }
+            else if (editTextMeetsnelheid.Text == "5")
+            {
+                command = "e";
+                command2 = "p";
+            }
+            else if (editTextMeetsnelheid.Text == "6")
+            {
+                command = "f";
+                command2 = "q";
+            }
+            else if (editTextMeetsnelheid.Text == "7")
+            {
+                command = "g";
+                command2 = "r";
+            }
+            else if (editTextMeetsnelheid.Text == "8")
+            {
+                command = "h";
+                command2 = "w";
+            }
+            else if (editTextMeetsnelheid.Text == "9")
+            {
+                command = "j";
+                command2 = "x";
+            }
+            else if (editTextMeetsnelheid.Text == "10")
+            {
+                command = "k";
+                command2 = "y";
+            }
+
+            executeCommand(command);
+            executeCommand(command2);
+        }
+
+        /*
+        //meetsnelheid sensor 2
+        private void EditTextMeetsnelheid2_AfterTextChanged(object sender, Android.Text.AfterTextChangedEventArgs e)
+        {
+            // editTextMeetsnelheid.Text
+            string command = "";
+            if (editTextMeetsnelheid.Text == "1")
+            {
+                command = "l";
+            }
+            else if (editTextMeetsnelheid.Text == "2")
+            {
+                command = "m";
+            }
+            else if (editTextMeetsnelheid.Text == "3")
+            {
+                command = "n";
+            }
+            else if (editTextMeetsnelheid.Text == "4")
+            {
+                command = "o";
+            }
+            else if (editTextMeetsnelheid.Text == "5")
+            {
+                command = "p";
+            }
+            else if (editTextMeetsnelheid.Text == "6")
+            {
+                command = "q";
+            }
+            else if (editTextMeetsnelheid.Text == "7")
+            {
+                command = "r";
+            }
+            else if (editTextMeetsnelheid.Text == "8")
+            {
+                command = "w";
+            }
+            else if (editTextMeetsnelheid.Text == "9")
+            {
+                command = "x";
+            }
+            else if (editTextMeetsnelheid.Text == "10")
+            {
+                command = "y";
+            }
+
+            executeCommand(command);
+         }
+        */
 
         //Send command to server and wait for response (blocking)
         //Method should only be called when socket existst
