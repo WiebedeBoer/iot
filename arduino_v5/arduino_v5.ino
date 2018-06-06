@@ -241,7 +241,7 @@ void executeCommand(char cmd)
             sensorReadInterval = 1000;
             //buf[0] = 'a';
             server.write(buf, 4);                             // response is always 4 chars (\n included)
-            Serial.print("Sensor: "); Serial.println(buf);
+            Serial.print("Sensor: Case A "); Serial.println(buf);
     break;
             case 'b': // Report sensor 1 value to the app  
             intToCharBuf(sensorValue, buf, 4);                // convert to charbuffer
