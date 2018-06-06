@@ -1,4 +1,4 @@
-﻿// Xamarin/C# app voor de besturing van een Arduino (Uno met Ethernet Shield) m.b.v. een socket-interface.
+// Xamarin/C# app voor de besturing van een Arduino (Uno met Ethernet Shield) m.b.v. een socket-interface.
 // Dit programma werkt samen met het Arduino-programma DomoticaServer.ino
 // De besturing heeft betrekking op het aan- en uitschakelen van een Arduino pin, waar een led aan kan hangen of, 
 // t.b.v. het Domotica project, een RF-zender waarmee een klik-aan-klik-uit apparaat bestuurd kan worden.
@@ -80,9 +80,9 @@ namespace Domotica
             on0 = FindViewById<Button>(Resource.Id.on0);
             on1 = FindViewById<Button>(Resource.Id.on1);
             on2 = FindViewById<Button>(Resource.Id.on2);
-            off0 = FindViewById<Button>(Resource.Id.off0);
-            off1 = FindViewById<Button>(Resource.Id.off1);
-            off2 = FindViewById<Button>(Resource.Id.off2);
+            //off0 = FindViewById<Button>(Resource.Id.off0);
+            //off1 = FindViewById<Button>(Resource.Id.off1);
+            //off2 = FindViewById<Button>(Resource.Id.off2);
             buttonConnect = FindViewById<Button>(Resource.Id.buttonConnect);
             buttonChangePinState = FindViewById<Button>(Resource.Id.buttonChangePinState);
             textViewTimerStateValue = FindViewById<TextView>(Resource.Id.textViewTimerStateValue);
@@ -105,7 +105,7 @@ namespace Domotica
             // Init commandlist, scheduled by socket timer
             commandList.Add(new Tuple<string, TextView>("s", textViewChangePinStateValue));
 
-            commandList.Add(new Tuple<string, TextView>("a", SignalSensor1));
+            //commandList.Add(new Tuple<string, TextView>("a", SignalSensor1));
             /*
             commandList.Add(new Tuple<string, TextView>("b", SignalSensor1));
             commandList.Add(new Tuple<string, TextView>("c", SignalSensor1));
@@ -117,7 +117,7 @@ namespace Domotica
             commandList.Add(new Tuple<string, TextView>("j", SignalSensor1));
             commandList.Add(new Tuple<string, TextView>("k", SignalSensor1));
             */
-            commandList.Add(new Tuple<string, TextView>("l", SignalSensor2));
+            //commandList.Add(new Tuple<string, TextView>("l", SignalSensor2));
             /*
             commandList.Add(new Tuple<string, TextView>("m", SignalSensor2));
             commandList.Add(new Tuple<string, TextView>("n", SignalSensor2));
@@ -136,7 +136,7 @@ namespace Domotica
             timerClock = new System.Timers.Timer() { Interval = 2000, Enabled = true }; // Interval >= 1000
             timerClock.Elapsed += (obj, args) =>
             {
-                RunOnUiThread(() => { textViewTimerStateValue.Text = DateTime.Now.ToString("h:mm:ss"); }); 
+                RunOnUiThread(() => { textViewTimerStateValue.Text = DateTime.Now.ToString("h:mm:ss"); });
             };
 
             // timer object, check Arduino state
@@ -146,13 +146,13 @@ namespace Domotica
             {
                 //RunOnUiThread(() =>
                 //{
-                    if (socket != null) // only if socket exists
-                    {
-                        // Send a command to the Arduino server on every tick (loop though list)
-                        UpdateGUI(executeCommand(commandList[listIndex].Item1), commandList[listIndex].Item2);  //e.g. UpdateGUI(executeCommand("s"), textViewChangePinStateValue);
-                        if (++listIndex >= commandList.Count) listIndex = 0;
-                    }
-                    else timerSockets.Enabled = false;  // If socket broken -> disable timer
+                if (socket != null) // only if socket exists
+                {
+                    // Send a command to the Arduino server on every tick (loop though list)
+                    UpdateGUI(executeCommand(commandList[listIndex].Item1), commandList[listIndex].Item2);  //e.g. UpdateGUI(executeCommand("s"), textViewChangePinStateValue);
+                    if (++listIndex >= commandList.Count) listIndex = 0;
+                }
+                else timerSockets.Enabled = false;  // If socket broken -> disable timer
                 //});
             };
 
@@ -179,7 +179,7 @@ namespace Domotica
                 };
             }
 
-            if (on0!= null)  // if button exists
+            if (on0 != null)  // if button exists
             {
                 on0.Click += (sender, e) =>
                 {
@@ -233,9 +233,11 @@ namespace Domotica
         private void EditTextMeetsnelheid_AfterTextChanged(object sender, Android.Text.AfterTextChangedEventArgs e)
         {
             // editTextMeetsnelheid.Text
-            string command ="";
+            string command = "";
             string command2 = "";
-            if (editTextMeetsnelheid.Text == "1") {
+            commandList.Clear();
+            if (editTextMeetsnelheid.Text == "1")
+            {
                 command = "a";
                 command2 = "l";
             }
@@ -284,7 +286,14 @@ namespace Domotica
                 command = "k";
                 command2 = "y";
             }
-
+            else
+            {
+                command = "a";
+                command2 = "l";
+            }
+            commandList.Add(new Tuple<string, TextView>("s", textViewChangePinStateValue));
+            commandList.Add(new Tuple<string, TextView>(command, SignalSensor1));
+            commandList.Add(new Tuple<string, TextView>(command2, SignalSensor2));
             executeCommand(command);
             executeCommand(command2);
         }
@@ -363,9 +372,11 @@ namespace Domotica
                         result = Encoding.ASCII.GetString(buffer, 0, bytesRead - 1); // skip \n
                     else result = "err";
                 }
-                catch (Exception exception) {
+                catch (Exception exception)
+                {
                     result = exception.ToString();
-                    if (socket != null) {
+                    if (socket != null)
+                    {
                         socket.Close();
                         socket = null;
                     }
@@ -391,7 +402,8 @@ namespace Domotica
                 butConText = "Please wait";
                 color = Color.Orange;
                 butConEnabled = false;
-            } else
+            }
+            else
             if (state == 2)
             {
                 butConText = "Disconnect";
@@ -419,7 +431,7 @@ namespace Domotica
             {
                 if (result == "OFF") textview.SetTextColor(Color.Red);
                 else if (result == " ON") textview.SetTextColor(Color.Green);
-                else textview.SetTextColor(Color.White);  
+                else textview.SetTextColor(Color.White);
                 textview.Text = result;
             });
         }
@@ -441,7 +453,9 @@ namespace Domotica
                             UpdateConnectionState(2, "Connected");
                             timerSockets.Enabled = true;                //Activate timer for communication with Arduino     
                         }
-                    } catch (Exception exception) {
+                    }
+                    catch (Exception exception)
+                    {
                         timerSockets.Enabled = false;
                         if (socket != null)
                         {
@@ -450,7 +464,7 @@ namespace Domotica
                         }
                         UpdateConnectionState(4, exception.Message);
                     }
-	            }
+                }
                 else // disconnect socket
                 {
                     socket.Close(); socket = null;
@@ -500,12 +514,14 @@ namespace Domotica
         //Check if the entered IP address is valid.
         private bool CheckValidIpAddress(string ip)
         {
-            if (ip != "") {
+            if (ip != "")
+            {
                 //Check user input against regex (check if IP address is not empty).
                 Regex regex = new Regex("\\b((25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)(\\.|$)){4}\\b");
                 Match match = regex.Match(ip);
                 return match.Success;
-            } else return false;
+            }
+            else return false;
         }
 
         //Check if the entered port is valid.
@@ -524,7 +540,8 @@ namespace Domotica
                     return ((portAsInteger >= 0) && (portAsInteger <= 65535));
                 }
                 else return false;
-            } else return false;
+            }
+            else return false;
         }
     }
 }
