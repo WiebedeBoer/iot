@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
     android:minWidth="25px"
-    android:minHeight="25px">
+    android:minHeight="25px"
+    android:id="@+id/linearLayout1">
     <RelativeLayout
         android:orientation="horizontal"
         android:layout_width="fill_parent"
@@ -145,59 +146,29 @@
             android:layout_below="@id/textViewSensorValue"
             android:textAppearance="?android:attr/textAppearanceMedium" />
         <Button
-            android:text="ON/OFF 0 T"
-            android:layout_width="300dp"
+            android:text="@string/buttonT"
+            android:layout_width="382.5dp"
             android:layout_height="wrap_content"
             android:id="@+id/on0"
             android:layout_below="@id/textViewDebug"
             android:layout_alignParentLeft="true"
             android:backgroundTint="#add8e6ff" />
-    <!--
         <Button
-            android:text="off 0 t"
-            android:layout_width="150dp"
-            android:layout_height="wrap_content"
-            android:id="@+id/off0"
-            android:layout_below="@id/textViewDebugValue"
-            android:layout_alignParentRight="true"
-            android:backgroundTint="#add8e6ff" />
-      -->
-        <Button
-            android:text="ON/OFF 1 U"
-            android:layout_width="300dp"
+            android:text="@string/buttonU"
+            android:layout_width="384.5dp"
             android:layout_height="wrap_content"
             android:id="@+id/on1"
             android:layout_below="@id/on0"
             android:layout_alignParentLeft="true"
             android:backgroundTint="#add8e6ff" />
-    <!-- 
-       <Button
-            android:text="OFF 1 U"
-            android:layout_width="150dp"
-            android:layout_height="wrap_content"
-            android:id="@+id/off1"
-            android:layout_below="@id/off0"
-            android:layout_alignParentRight="true"
-            android:backgroundTint="#add8e6ff" />
-      -->
         <Button
-            android:text="ON/OFF 2 V"
-            android:layout_width="300dp"
+            android:text="@string/buttonV"
+            android:layout_width="393.0dp"
             android:layout_height="wrap_content"
             android:id="@+id/on2"
             android:layout_below="@id/on1"
             android:layout_alignParentLeft="true"
             android:backgroundTint="#add8e6ff" />
-    <!--
-          <Button
-            android:text="OFF 2 V"
-            android:layout_width="150dp"
-            android:layout_height="wrap_content"
-            android:id="@+id/off2"
-            android:layout_below="@id/off1"
-            android:layout_alignParentRight="true"
-            android:backgroundTint="#add8e6ff" />
-      -->
         <TextView
             android:text="SignalSensor1 OFF"
             android:layout_width="150dp"
@@ -215,7 +186,7 @@
             android:layout_alignParentRight="true"
             android:textColor="@android:color/holo_orange_dark" />
         <TextView
-            android:text="Sensor 1"
+            android:text="@string/sensor1"
             android:layout_width="150dp"
             android:layout_height="wrap_content"
             android:id="@+id/sensor1"
@@ -223,56 +194,54 @@
             android:layout_alignParentLeft="true"
             android:backgroundTint="#add8e6ff" />
         <TextView
-            android:text="Sensor 2"
+            android:text="@string/sensor2"
             android:layout_width="150dp"
             android:layout_height="wrap_content"
             android:id="@+id/sensor2"
             android:layout_below="@id/sensor1"
             android:layout_alignParentLeft="true"
             android:backgroundTint="#add8e6ff" />
+        <TextView
+            android:text="@string/sensorSpeed"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
+            android:id="@+id/textSensorSpeed"
+            android:layout_below="@id/sensor2"
+            android:layout_alignParentRight="true"
+            android:backgroundTint="#add8e6ff" />
         <EditText
-            android:layout_width="100dp"
+            android:layout_width="150.0dp"
             android:layout_height="wrap_content"
             android:id="@+id/editTextMeetsnelheid"
-            android:text="1"
             android:lines="1"
             android:minLines="1"
             android:maxLines="1"
             android:inputType="numberDecimal"
             android:digits="0123456789"
-            android:layout_below="@id/SignalSensor2"
-            android:layout_alignParentRight="true" />
-    <!--       <EditText
-            android:layout_width="100dp"
-            android:layout_height="wrap_content"
-            android:id="@+id/editTextMeetsnelheid2"
-            android:text="1"
-            android:lines="1"
-            android:minLines="1"
-            android:maxLines="1"
-            android:inputType="numberDecimal"
-            android:digits="0123456789"
-            android:layout_below="@id/editTextMeetsnelheid"
-            android:layout_alignParentRight="true" />
-      -->
+            android:layout_below="@id/textSensorSpeed"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="0.0dp" />
         <TextView
-            android:text="Sensor Speed"
+            android:text="@string/threshold"
             android:textAppearance="?android:attr/textAppearanceMedium"
-            android:layout_width="150dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/textSensor1Speed"
-            android:layout_below="@id/sensor2"
+            android:id="@+id/textThreshold"
+            android:layout_below="@+id/SignalSensor2"
             android:layout_alignParentLeft="true"
             android:backgroundTint="#add8e6ff" />
-    <!--        <TextView
-            android:text="Sensor 2 Speed"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:layout_width="150dp"
+        <EditText
+            android:layout_width="150.0dp"
             android:layout_height="wrap_content"
-            android:id="@+id/textSensor2Speed"
-            android:layout_below="@id/textSensor1Speed"
+            android:id="@+id/editTextThreshold"
+            android:lines="1"
+            android:minLines="1"
+            android:maxLines="1"
+            android:inputType="numberDecimal"
+            android:digits="0123456789"
+            android:layout_below="@id/textThreshold"
             android:layout_alignParentLeft="true"
-            android:backgroundTint="#add8e6ff" />
-    -->
+            android:layout_marginRight="0.0dp" />
     </RelativeLayout>
 </LinearLayout>
