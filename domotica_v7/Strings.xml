@@ -22,8 +22,8 @@
   <string name="sensorSpeed">Sensor Speed</string>
   <string name="threshold">Max waarde</string>
   <string name="buttonT">ON/OFF - 0 T</string>
-  <string name="buttonU">ON/OFF - 0 U</string>
-  <string name="buttonV">ON/OFF - 0 V</string>
+  <string name="buttonU">ON/OFF - 1 U</string>
+  <string name="buttonV">ON/OFF - 2 V</string>
   <string name="sensor1">Sensor 1</string>
   <string name="sensor2">Sensor 2</string>
   <string name="buttonAuto">Auto Connect</string>
