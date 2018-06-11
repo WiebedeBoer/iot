@@ -53,9 +53,7 @@ namespace Domotica
         // Controls on GUI
         Button buttonConnect;
         Button buttonChangePinState;
-        Button on0;
-        Button on1;
-        Button on2;
+        Button on0, on1, on2, autoConnect;
         TextView textViewServerConnect, textViewTimerStateValue;
         public TextView textViewChangePinStateValue, textViewSensorValue, textViewDebugValue, SignalSensor1, SignalSensor2;
         EditText editTextIPAddress, editTextIPPort, editTextMeetsnelheid, editTextThreshold;
@@ -68,7 +66,6 @@ namespace Domotica
         protected override void OnCreate(Bundle bundle)
         {
             base.OnCreate(bundle);
-
             // Set our view from the "main" layout resource (strings are loaded from Recources -> values -> Strings.xml)
             SetContentView(Resource.Layout.Main);
 
@@ -81,14 +78,13 @@ namespace Domotica
             textViewTimerStateValue = FindViewById<TextView>(Resource.Id.textViewTimerStateValue);
             textViewServerConnect = FindViewById<TextView>(Resource.Id.textViewServerConnect);
             textViewChangePinStateValue = FindViewById<TextView>(Resource.Id.textViewChangePinStateValue);
-            textViewSensorValue = FindViewById<TextView>(Resource.Id.textViewSensorValue);
-            textViewDebugValue = FindViewById<TextView>(Resource.Id.textViewDebugValue);
             editTextIPAddress = FindViewById<EditText>(Resource.Id.editTextIPAddress);
             editTextIPPort = FindViewById<EditText>(Resource.Id.editTextIPPort);
             SignalSensor1 = FindViewById<TextView>(Resource.Id.SignalSensor1);
             SignalSensor2 = FindViewById<TextView>(Resource.Id.SignalSensor2);
             editTextMeetsnelheid = FindViewById<EditText>(Resource.Id.editTextMeetsnelheid);
             editTextThreshold = FindViewById<EditText>(Resource.Id.editTextThreshold);
+            autoConnect = FindViewById<Button>(Resource.Id.autoConnect);
 
             editTextMeetsnelheid.AfterTextChanged += EditTextMeetsnelheid_AfterTextChanged;
             editTextThreshold.AfterTextChanged += editTextThreshold_textchange;
@@ -129,6 +125,7 @@ namespace Domotica
             {
                 buttonConnect.Click += (sender, e) =>
                 {
+                    //AutoConnect();
                     //Validate the user input (IP address and port)
                     if (CheckValidIpAddress(editTextIPAddress.Text) && CheckValidPort(editTextIPPort.Text))
                     {
@@ -137,6 +134,11 @@ namespace Domotica
                     else UpdateConnectionState(3, "Please check IP");
                 };
             }
+
+            autoConnect.Click += (sender, e) =>
+            {
+                AutoConnect();
+            };
 
             //Add the "Change pin state" button handler.
             if (buttonChangePinState != null)
@@ -159,7 +161,7 @@ namespace Domotica
             {
                 on1.Click += (sender, e) =>
                 {
-                    socket.Send(Encoding.ASCII.GetBytes("$ut---------#"));
+                    socket.Send(Encoding.ASCII.GetBytes("$u---------#"));
                 };
             }
 
@@ -167,7 +169,7 @@ namespace Domotica
             {
                 on2.Click += (sender, e) =>
                 {
-                    socket.Send(Encoding.ASCII.GetBytes("$vt---------#"));
+                    socket.Send(Encoding.ASCII.GetBytes("$v---------#"));
                 };
             }
 
@@ -190,56 +192,6 @@ namespace Domotica
                 command = "a" + editTextMeetsnelheid.Text;
                 command2 = "b" + editTextMeetsnelheid.Text;
             }
-            //else if (editTextMeetsnelheid.Text == "2")
-            //{
-            //    command = "b";
-            //    command2 = "m";
-            //}
-            //else if (editTextMeetsnelheid.Text == "3")
-            //{
-            //    command = "c";
-            //    command2 = "n";
-            //}
-            //else if (editTextMeetsnelheid.Text == "4")
-            //{
-            //    command = "d";
-            //    command2 = "o";
-            //}
-            //else if (editTextMeetsnelheid.Text == "5")
-            //{
-            //    command = "e";
-            //    command2 = "p";
-            //}
-            //else if (editTextMeetsnelheid.Text == "6")
-            //{
-            //    command = "f";
-            //    command2 = "q";
-            //}
-            //else if (editTextMeetsnelheid.Text == "7")
-            //{
-            //    command = "g";
-            //    command2 = "r";
-            //}
-            //else if (editTextMeetsnelheid.Text == "8")
-            //{
-            //    command = "h";
-            //    command2 = "w";
-            //}
-            //else if (editTextMeetsnelheid.Text == "9")
-            //{
-            //    command = "j";
-            //    command2 = "x";
-            //}
-            //else if (editTextMeetsnelheid.Text == "10")
-            //{
-            //    command = "k";
-            //    command2 = "y";
-            //}
-            //else
-            //{
-            //    command = "a";
-            //    command2 = "l";
-            //}
             commandList.Add(new Tuple<string, TextView>("s", textViewChangePinStateValue));
             commandList.Add(new Tuple<string, TextView>("a", SignalSensor1));
             commandList.Add(new Tuple<string, TextView>("b", SignalSensor2));
@@ -322,6 +274,7 @@ namespace Domotica
                 textViewServerConnect.Text = text;
                 if (butConText != null)  // text existst
                 {
+
                     buttonConnect.Text = butConText;
                     textViewServerConnect.SetTextColor(color);
                     buttonConnect.Enabled = butConEnabled;
@@ -448,6 +401,25 @@ namespace Domotica
                 else return false;
             }
             else return false;
+        }
+
+        /// <summary>
+        /// Tries all IP adresses in the 192.168.1 range on port 3300 , stops when it connects
+        /// </summary>
+        void AutoConnect()
+        {
+            for (int i = 2; i < 256; i++)
+            {
+                string p = "192.168.1." + i;
+                ConnectSocket(p, "3300");
+                if (textViewServerConnect.Text == "Connected")
+                {
+                    return;
+                }
+
+            }
+            //ConnectSocket("192.168.1.2","3300");
+
         }
     }
 }
