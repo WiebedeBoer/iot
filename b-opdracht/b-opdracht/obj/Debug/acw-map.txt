@@ -1,0 +1,4 @@
+b_opdracht.MainActivity, b-opdracht;md5eeda0d70db3cb877c17fd4995f706e24.MainActivity
+b_opdracht.MainActivity, b-opdracht, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null;md5eeda0d70db3cb877c17fd4995f706e24.MainActivity
+b_opdracht.MainActivity;md5eeda0d70db3cb877c17fd4995f706e24.MainActivity
+b_opdracht.MainActivity;md5eeda0d70db3cb877c17fd4995f706e24.MainActivity
