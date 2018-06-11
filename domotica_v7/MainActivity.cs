@@ -1,4 +1,4 @@
-﻿// Xamarin/C# app voor de besturing van een Arduino (Uno met Ethernet Shield) m.b.v. een socket-interface.
+// Xamarin/C# app voor de besturing van een Arduino (Uno met Ethernet Shield) m.b.v. een socket-interface.
 // Dit programma werkt samen met het Arduino-programma DomoticaServer.ino
 // De besturing heeft betrekking op het aan- en uitschakelen van een Arduino pin, waar een led aan kan hangen of, 
 // t.b.v. het Domotica project, een RF-zender waarmee een klik-aan-klik-uit apparaat bestuurd kan worden.
@@ -51,13 +51,11 @@ namespace Domotica
     {
         // Variables (components/controls)
         // Controls on GUI
-        
         Button buttonConnect;
         Button buttonChangePinState;
         Button on0;
         Button on1;
         Button on2;
-        Button autoConnectButton;
         TextView textViewServerConnect, textViewTimerStateValue;
         public TextView textViewChangePinStateValue, textViewSensorValue, textViewDebugValue, SignalSensor1, SignalSensor2;
         EditText editTextIPAddress, editTextIPPort, editTextMeetsnelheid, editTextThreshold;
@@ -78,7 +76,6 @@ namespace Domotica
             on0 = FindViewById<Button>(Resource.Id.on0);
             on1 = FindViewById<Button>(Resource.Id.on1);
             on2 = FindViewById<Button>(Resource.Id.on2);
-            autoConnectButton = FindViewById<Button>(Resource.Id.AutoConnect);
             buttonConnect = FindViewById<Button>(Resource.Id.buttonConnect);
             buttonChangePinState = FindViewById<Button>(Resource.Id.buttonChangePinState);
             textViewTimerStateValue = FindViewById<TextView>(Resource.Id.textViewTimerStateValue);
@@ -115,10 +112,6 @@ namespace Domotica
             timerSockets = new System.Timers.Timer() { Interval = 1000, Enabled = false }; // Interval >= 750
             timerSockets.Elapsed += (obj, args) =>
             {
-                //treshold
-                checkThresholds();
-
-
                 //RunOnUiThread(() =>
                 //{
                 if (socket != null) // only if socket exists
@@ -150,7 +143,7 @@ namespace Domotica
             {
                 buttonChangePinState.Click += (sender, e) =>
                 {
-                    socket.Send(Encoding.ASCII.GetBytes("t"));                 // Send toggle-command to the Arduino
+                    socket.Send(Encoding.ASCII.GetBytes("$t---------#"));                 // Send toggle-command to the Arduino
                 };
             }
 
@@ -158,7 +151,7 @@ namespace Domotica
             {
                 on0.Click += (sender, e) =>
                 {
-                    socket.Send(Encoding.ASCII.GetBytes("t"));
+                    socket.Send(Encoding.ASCII.GetBytes("$t---------#"));
                 };
             }
 
@@ -166,7 +159,7 @@ namespace Domotica
             {
                 on1.Click += (sender, e) =>
                 {
-                    socket.Send(Encoding.ASCII.GetBytes("u"));
+                    socket.Send(Encoding.ASCII.GetBytes("$ut---------#"));
                 };
             }
 
@@ -174,103 +167,90 @@ namespace Domotica
             {
                 on2.Click += (sender, e) =>
                 {
-                    socket.Send(Encoding.ASCII.GetBytes("v"));
-                };
-            }
-
-            //autoconnect button
-            if (autoConnectButton != null)
-            {
-                autoConnectButton.Click += (sender, e) =>
-                {
-                    AutoConnect();
+                    socket.Send(Encoding.ASCII.GetBytes("$vt---------#"));
                 };
             }
 
         }
 
-        //treshold values
-        bool Thres1High;
-        int Sensor1Thres;
-
-        //meetsnelheid sensor 1 en 2
+        //meetsnelheid sensor 1
         private void EditTextMeetsnelheid_AfterTextChanged(object sender, Android.Text.AfterTextChangedEventArgs e)
         {
             // editTextMeetsnelheid.Text
             string command = "";
             string command2 = "";
             commandList.Clear();
-            if (editTextMeetsnelheid.Text == "1")
+            if (editTextMeetsnelheid.Text == "" || editTextMeetsnelheid.Text == null)
             {
-                command = "a";
-                command2 = "l";
-            }
-            else if (editTextMeetsnelheid.Text == "2")
-            {
-                command = "b";
-                command2 = "m";
-            }
-            else if (editTextMeetsnelheid.Text == "3")
-            {
-                command = "c";
-                command2 = "n";
-            }
-            else if (editTextMeetsnelheid.Text == "4")
-            {
-                command = "d";
-                command2 = "o";
-            }
-            else if (editTextMeetsnelheid.Text == "5")
-            {
-                command = "e";
-                command2 = "p";
-            }
-            else if (editTextMeetsnelheid.Text == "6")
-            {
-                command = "f";
-                command2 = "q";
-            }
-            else if (editTextMeetsnelheid.Text == "7")
-            {
-                command = "g";
-                command2 = "r";
-            }
-            else if (editTextMeetsnelheid.Text == "8")
-            {
-                command = "h";
-                command2 = "w";
-            }
-            else if (editTextMeetsnelheid.Text == "9")
-            {
-                command = "j";
-                command2 = "x";
-            }
-            else if (editTextMeetsnelheid.Text == "10")
-            {
-                command = "k";
-                command2 = "y";
+                command = "a1";
+                command2 = "b1";
             }
             else
             {
-                command = "a";
-                command2 = "l";
+                command = "a" + editTextMeetsnelheid.Text;
+                command2 = "b" + editTextMeetsnelheid.Text;
             }
+            //else if (editTextMeetsnelheid.Text == "2")
+            //{
+            //    command = "b";
+            //    command2 = "m";
+            //}
+            //else if (editTextMeetsnelheid.Text == "3")
+            //{
+            //    command = "c";
+            //    command2 = "n";
+            //}
+            //else if (editTextMeetsnelheid.Text == "4")
+            //{
+            //    command = "d";
+            //    command2 = "o";
+            //}
+            //else if (editTextMeetsnelheid.Text == "5")
+            //{
+            //    command = "e";
+            //    command2 = "p";
+            //}
+            //else if (editTextMeetsnelheid.Text == "6")
+            //{
+            //    command = "f";
+            //    command2 = "q";
+            //}
+            //else if (editTextMeetsnelheid.Text == "7")
+            //{
+            //    command = "g";
+            //    command2 = "r";
+            //}
+            //else if (editTextMeetsnelheid.Text == "8")
+            //{
+            //    command = "h";
+            //    command2 = "w";
+            //}
+            //else if (editTextMeetsnelheid.Text == "9")
+            //{
+            //    command = "j";
+            //    command2 = "x";
+            //}
+            //else if (editTextMeetsnelheid.Text == "10")
+            //{
+            //    command = "k";
+            //    command2 = "y";
+            //}
+            //else
+            //{
+            //    command = "a";
+            //    command2 = "l";
+            //}
             commandList.Add(new Tuple<string, TextView>("s", textViewChangePinStateValue));
-            commandList.Add(new Tuple<string, TextView>(command, SignalSensor1));
-            commandList.Add(new Tuple<string, TextView>(command2, SignalSensor2));
+            commandList.Add(new Tuple<string, TextView>("a", SignalSensor1));
+            commandList.Add(new Tuple<string, TextView>("b", SignalSensor2));
             executeCommand(command);
             executeCommand(command2);
         }
 
-        //drempelwaarde
         private void editTextThreshold_textchange(object sender, Android.Text.AfterTextChangedEventArgs e)
         {
-            string val = editTextThreshold.Text;
-            Sensor1Thres = Convert.ToInt32(editTextThreshold.Text);
-            for (int i = 0; i < val.Length; i++)
-            {
-                executeCommand(val[i].ToString());
-            }
+            string val = "z" + editTextThreshold.Text;
+            executeCommand(val);
         }
 
         //Send command to server and wait for response (blocking)
@@ -284,7 +264,9 @@ namespace Domotica
             if (socket != null)
             {
                 //Send command to server
-                socket.Send(Encoding.ASCII.GetBytes(cmd));
+                string rep = "$" + cmd.PadRight(11, '-');
+                string buf = rep + "#";
+                socket.Send(Encoding.ASCII.GetBytes(buf));
 
                 try //Get response from server
                 {
@@ -467,50 +449,5 @@ namespace Domotica
             }
             else return false;
         }
-
-        /// <summary>
-        /// Tries all IP adresses in the 192.168.1 range on port 3300 , stops when it connects
-        /// </summary>
-        void AutoConnect()
-        {
-            for (int i = 2; i < 256; i++)
-            {
-                string p = "192.168.1." + i;
-                ConnectSocket(p, "3300");
-                if (textViewServerConnect.Text == "Connected")
-                {
-                    return;
-                }
-
-            }
-            //ConnectSocket("192.168.1.2","3300");
-
-        }
-
-        /// <summary>
-        /// toggles the kaku when below sensor 1 treshold
-        /// </summary>
-        private void checkThresholds()
-        {
-            //Threshold 1 toggled kaku 0 op de waarde van Sensor 1
-            int SensorValue = Convert.ToInt32(SignalSensor1.Text);
-            if (SensorValue <= Sensor1Thres)
-            {
-                if (Thres1High)
-                {
-                    socket.Send(Encoding.ASCII.GetBytes("t"));
-                    Thres1High = false;
-                }
-            }
-            else
-            {
-                if (!Thres1High)
-                {
-                    socket.Send(Encoding.ASCII.GetBytes("t"));
-                    Thres1High = true;
-                }
-            }
-        }
-
     }
 }
