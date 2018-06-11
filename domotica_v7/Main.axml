@@ -163,7 +163,7 @@
             android:backgroundTint="#add8e6ff" />
         <Button
             android:text="@string/buttonV"
-            android:layout_width="150dp"
+            android:layout_width="393.0dp"
             android:layout_height="wrap_content"
             android:id="@+id/on2"
             android:layout_below="@id/on1"
@@ -242,14 +242,7 @@
             android:digits="0123456789"
             android:layout_below="@id/textThreshold"
             android:layout_alignParentLeft="true"
-            android:layout_marginRight="0.0dp" />
-        <Button
-            android:text="Autoconnect"
-            android:id="@+id/AutoConnect"
-            android:layout_width="150dp"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/on1"
-            android:layout_alignParentRight="true"
-            android:textColor="@android:color/holo_orange_dark" />
+            android:layout_marginRight="0.0dp"
+            android:maxLength="3" />
     </RelativeLayout>
 </LinearLayout>
