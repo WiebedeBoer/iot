@@ -26,4 +26,5 @@
   <string name="buttonV">ON/OFF - 0 V</string>
   <string name="sensor1">Sensor 1</string>
   <string name="sensor2">Sensor 2</string>
+  <string name="buttonAuto">Auto Connect</string>
 </resources>
