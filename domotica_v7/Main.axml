@@ -220,5 +220,26 @@
             android:layout_alignParentLeft="true"
             android:layout_marginRight="0.0dp"
             android:maxLength="3" />
+        <Button
+            android:text="@string/cookTimer"
+            android:layout_width="150.0dp"
+            android:layout_height="wrap_content"
+            android:id="@+id/buttonTimer"
+            android:layout_below="@+id/editTextThreshold"
+            android:layout_alignParentLeft="true"
+            android:backgroundTint="#add8e6ff" />
+        <EditText
+            android:layout_width="150.0dp"
+            android:layout_height="wrap_content"
+            android:id="@+id/editTextTimer"
+            android:lines="1"
+            android:minLines="1"
+            android:maxLines="1"
+            android:inputType="numberDecimal"
+            android:digits="0123456789"
+            android:layout_below="@id/editTextMeetsnelheid"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="0.0dp"
+            android:maxLength="3" />
     </RelativeLayout>
 </LinearLayout>
