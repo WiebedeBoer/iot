@@ -75,6 +75,7 @@ int kaku_unit = 0;                       //kaku unit nummer
 String bufferGlobal = "";
 bool OK = false;
 int threshold = 200;
+bool opdr5 = false;
 
 int sensorReadInterval = 500;
 
@@ -225,9 +226,9 @@ sensorValue = analogRead(analogPin); // read the value from the sensor
 
 
 //als maximum of minimum afstand
-  if (distance >= threshold || distance <= 0){
-    distance = threshold;
-  }
+//  if (distance >= threshold || distance <= 0){
+//    distance = threshold;
+//  }
 
 
   
@@ -237,17 +238,11 @@ sensorValue = analogRead(analogPin); // read the value from the sensor
 
 //als onder drempelwaarde
     if (sensorValue2 < threshold){
-  apa3Transmitter.sendUnit(0, 1);  //kaku unit 0 aan
+      apa3Transmitter.sendUnit(0, 1);  //kaku unit 0 aan
     }
     else {
-  apa3Transmitter.sendUnit(0, 0);  //kaku unit 0 uit  
+      apa3Transmitter.sendUnit(0, 0);  //kaku unit 0 uit  
     }
-
-  
-//Serial.println(sensorValue);
-//Serial.println(sensorValue2);
-
-  
 }
 
 // Choose and switch your Kaku device, state is true/false (HIGH/LOW)
@@ -279,6 +274,21 @@ void executeCommand(char cmd)
             Serial.print("Sensor: Case Z "); Serial.println(buf);
             Serial.print(threshold);
      break;
+               case 'x': // Report sensor 1 value to the app  
+                intToCharBuf(sensorValue, buf, 4);                // convert to charbuffer
+                if (opdr5)
+                {
+                  apa3Transmitter.sendUnit(1, 1);
+                  opdr5 = false;
+                }
+                else
+                {
+                  apa3Transmitter.sendUnit(1, 0);
+                  opdr5 = true;
+                }
+                server.write(buf, 4);                             // response is always 4 chars (\n included)
+                Serial.print("Sensor: Case X "); Serial.println(buf);
+    break;
             case 'a': // Report sensor 1 value to the app  
             intToCharBuf(sensorValue, buf, 4);                // convert to charbuffer
             if (bufferGlobal != 0)
