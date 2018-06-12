@@ -53,15 +53,16 @@ namespace Domotica
         // Controls on GUI
         Button buttonConnect;
         Button buttonChangePinState;
-        Button on0, on1, on2, autoConnect;
+        Button on0, on1, on2, autoConnect, buttonTimer;
         TextView textViewServerConnect, textViewTimerStateValue;
         public TextView textViewChangePinStateValue, textViewSensorValue, textViewDebugValue, SignalSensor1, SignalSensor2;
-        EditText editTextIPAddress, editTextIPPort, editTextMeetsnelheid, editTextThreshold;
+        EditText editTextIPAddress, editTextIPPort, editTextMeetsnelheid, editTextThreshold, editTextTimer;
 
-        Timer timerClock, timerSockets;             // Timers   
+        Timer timerClock, timerSockets, cdTimer;    // Timers   
         Socket socket = null;                       // Socket   
         List<Tuple<string, TextView>> commandList = new List<Tuple<string, TextView>>();  // List for commands and response places on UI
         int listIndex = 0;
+        int countSeconds;
 
         protected override void OnCreate(Bundle bundle)
         {
@@ -85,6 +86,8 @@ namespace Domotica
             editTextMeetsnelheid = FindViewById<EditText>(Resource.Id.editTextMeetsnelheid);
             editTextThreshold = FindViewById<EditText>(Resource.Id.editTextThreshold);
             autoConnect = FindViewById<Button>(Resource.Id.autoConnect);
+            buttonTimer = FindViewById<Button>(Resource.Id.buttonTimer);
+            editTextTimer= FindViewById<EditText>(Resource.Id.editTextTimer);
 
             editTextMeetsnelheid.AfterTextChanged += EditTextMeetsnelheid_AfterTextChanged;
             editTextThreshold.AfterTextChanged += editTextThreshold_textchange;
@@ -97,10 +100,10 @@ namespace Domotica
             this.Title = this.Title + " (timer sockets)";
 
             // timer object, running clock
-            timerClock = new System.Timers.Timer() { Interval = 2000, Enabled = true }; // Interval >= 1000
+            timerClock = new System.Timers.Timer() { Interval = 1000, Enabled = true }; // Interval >= 1000
             timerClock.Elapsed += (obj, args) =>
             {
-                RunOnUiThread(() => { textViewTimerStateValue.Text = DateTime.Now.ToString("h:mm:ss"); });
+                RunOnUiThread(() => { textViewTimerStateValue.Text = DateTime.Now.ToString("H:mm:ss"); });
             };
 
             // timer object, check Arduino state
@@ -135,10 +138,43 @@ namespace Domotica
                 };
             }
 
-            autoConnect.Click += (sender, e) =>
+            if (autoConnect != null)
             {
-                AutoConnect();
-            };
+                autoConnect.Click += (sender, e) =>
+                {
+                    AutoConnect();
+                };
+            }
+
+            if (buttonTimer != null)
+            {
+                buttonTimer.Click += (sender, e) =>
+                {
+                    cdTimer = new Timer() {Interval = 1000, Enabled = true };
+                    countSeconds = Int32.Parse(editTextTimer.Text);
+                    editTextTimer.Enabled = false;
+                    cdTimer.Elapsed += (obj, args) =>
+                    {
+                        if (countSeconds > 0)
+                        {
+                            countSeconds--;
+                        }
+                        else
+                        {
+                            countSeconds = 0;
+                        }
+                        RunOnUiThread(() => { editTextTimer.Text = countSeconds.ToString(); });
+                        if (countSeconds == 0)
+                        {
+                            cdTimer.Stop();
+                            socket.Send(Encoding.ASCII.GetBytes("$x---------#"));
+                            editTextTimer.Enabled = true;
+                        }
+                    };
+                    
+                };
+            }
+
 
             //Add the "Change pin state" button handler.
             if (buttonChangePinState != null)
@@ -422,4 +458,6 @@ namespace Domotica
 
         }
     }
+
+    
 }
