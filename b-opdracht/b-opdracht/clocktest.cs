@@ -19,10 +19,13 @@ namespace Domotica
     public class Alarmcontroller : Activity
     {
         Toast repeating;
+
+        EditText timertext;
+     
       //  Button oneshotAlarm;
-        //Button repeatingAlarm;
+      //Button repeatingAlarm;
       //  Button stoprepeatingAlarm;
-        // AlarmReceiver alarmy = new AlarmReceiver();
+      // AlarmReceiver alarmy = new AlarmReceiver();
 
         protected override void OnCreate(Bundle savedInstanceState)
         {
@@ -36,28 +39,35 @@ namespace Domotica
             FindViewById<Button>(Resource.Id.repeatingAlarm).Click += StartRepeatingClick;
 
             FindViewById<Button>(Resource.Id.stoprepeatingAlarm).Click += StopRepeatingClick;
+
+         //   FindViewById<EditText>(Resource.Id.timertext).Click += pp;
+            
         }
 
 
         void OneShotClick(object sender, EventArgs e)
-        {  
+        {
             // When the alarm goes off, we want to broadcast an Intent to our
-           // BroadcastReceiver.  Here we make an Intent with an explicit class
-           // name to have our own receiver (which has been published in
-           // AndroidManifest.xml) instantiated and called, and then create an
-           // IntentSender to have the intent executed as a broadcast.
+            // BroadcastReceiver.  Here we make an Intent with an explicit class
+            // name to have our own receiver (which has been published in
+            // AndroidManifest.xml) instantiated and called, and then create an
+            // IntentSender to have the intent executed as a broadcast.
 
+            timertext = FindViewById<EditText>(Resource.Id.timertext);
             AlarmManager am = (AlarmManager)GetSystemService(AlarmService);
            Intent oneshotIntent = new Intent(this, typeof(OneShotAlarm));
             PendingIntent source = PendingIntent.GetBroadcast(this, 0, oneshotIntent, 0);
             // my code
-            AlarmManager.AlarmClockInfo p = new AlarmManager.AlarmClockInfo( 1,source);
+            long pp = Convert.ToInt64(timertext.Text);
+            AlarmManager.AlarmClockInfo p = new AlarmManager.AlarmClockInfo(pp ,source);
+         
             // end my code
             // Schedule the alarm for 10 seconds from now!
-          
-           
-             am.Set(AlarmType.ElapsedRealtime, SystemClock.ElapsedRealtime() + 1 * 1000, source);
-          //  am.SetAlarmClock(p,source);
+
+
+            //   am.Set(AlarmType.ElapsedRealtime, SystemClock.ElapsedRealtime() + 10 * 1000, source);
+            am.Set(AlarmType.ElapsedRealtime, SystemClock.ElapsedRealtime() + pp * 1000, source);
+            //am.SetAlarmClock(p,source);
            
 
             // Tell the user about what we did.
@@ -81,10 +91,7 @@ namespace Domotica
 
             // Schedule the alarm!
             var am = (AlarmManager)GetSystemService(AlarmService);
-            am.SetRepeating(AlarmType.ElapsedRealtimeWakeup,
-                    SystemClock.ElapsedRealtime() + 15 * 1000,
-                    15 * 1000,
-                    source);
+            am.SetRepeating(AlarmType.ElapsedRealtimeWakeup, SystemClock.ElapsedRealtime() + 15 * 1000, 15 * 1000,  source);
 
             // Tell the user about what we did.
             if (repeating != null)
@@ -123,8 +130,8 @@ namespace Domotica
     }
 
 
-
-	public class RepeatingAlarm : BroadcastReceiver
+[BroadcastReceiver(Enabled = true)]
+public class RepeatingAlarm : BroadcastReceiver
     {
         public override void OnReceive(Context context, Intent intent)
         {
