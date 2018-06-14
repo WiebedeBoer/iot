@@ -9,6 +9,8 @@ using Android.OS;
 using Android.Runtime;
 using Android.Views;
 using Android.Widget;
+using Java.Util;
+
 
 
 //using static Android.Widget.Toast;
@@ -19,6 +21,9 @@ namespace Domotica
     public class Alarmcontroller : Activity
     {
         Toast repeating;
+
+        EditText timertext;
+        TimePicker timeselector;
         //  Button oneshotAlarm;
         //Button repeatingAlarm;
         //  Button stoprepeatingAlarm;
@@ -36,10 +41,17 @@ namespace Domotica
             FindViewById<Button>(Resource.Id.repeatingAlarm).Click += StartRepeatingClick;
 
             FindViewById<Button>(Resource.Id.stoprepeatingAlarm).Click += StopRepeatingClick;
+
+           timeselector = FindViewById<TimePicker>(Resource.Id.timePicker);
+
+            timertext = FindViewById<EditText>(Resource.Id.timertext);
+
+
+        
         }
 
 
-        void OneShotClick(object sender, EventArgs e)
+    void OneShotClick(object sender, EventArgs e)
         {
             // When the alarm goes off, we want to broadcast an Intent to our
             // BroadcastReceiver.  Here we make an Intent with an explicit class
@@ -47,18 +59,39 @@ namespace Domotica
             // AndroidManifest.xml) instantiated and called, and then create an
             // IntentSender to have the intent executed as a broadcast.
 
+            int timeHour = Convert.ToInt32(timeselector.CurrentHour);
+            int timeMinutes = Convert.ToInt32(timeselector.CurrentMinute);
+
+            int timeHour2 = Convert.ToInt32(timeselector.Hour);
+            int timeMinutes2 = Convert.ToInt32(timeselector.Minute);
+
+            long q = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
+
             AlarmManager am = (AlarmManager)GetSystemService(AlarmService);
-            Intent oneshotIntent = new Intent(this, typeof(OneShotAlarm));
+           Intent oneshotIntent = new Intent(this, typeof(OneShotAlarm));
             PendingIntent source = PendingIntent.GetBroadcast(this, 0, oneshotIntent, 0);
             // my code
-            AlarmManager.AlarmClockInfo p = new AlarmManager.AlarmClockInfo(1, source);
+          //  long pp = Convert.ToInt64(timertext.Text);
+          //  AlarmManager.AlarmClockInfo p = new AlarmManager.AlarmClockInfo(pp ,source);
+
             // end my code
             // Schedule the alarm for 10 seconds from now!
+            
+            //   am.Set(AlarmType.ElapsedRealtime, SystemClock.ElapsedRealtime() + 10 * 1000, source);
+            long Currenttimemilliseconds = DateTime.Now.Ticks / TimeSpan.TicksPerMillisecond;
+       
+            //am.SetAlarmClock(p,source);
 
 
-            am.Set(AlarmType.ElapsedRealtime, SystemClock.ElapsedRealtime() + 1 * 1000, source);
-            //  am.SetAlarmClock(p,source);
 
+            Java.Util.Calendar calendar = Java.Util.Calendar.Instance;
+            calendar.Set(CalendarField.HourOfDay, timeHour);
+            calendar.Set(CalendarField.Minute, timeMinutes);
+            Console.WriteLine();
+           // am.SetRepeating(AlarmType.RtcWakeup, calendar.TimeInMillis, AlarmManager.IntervalDay, source);
+
+
+            am.Set(AlarmType.RtcWakeup, calendar.TimeInMillis, source);
 
             // Tell the user about what we did.
             if (repeating != null)
@@ -66,6 +99,11 @@ namespace Domotica
             repeating = Toast.MakeText(this, Resource.String.one_shot_scheduled, ToastLength.Long);
             repeating.Show();
         }
+
+
+
+
+
 
         void StartRepeatingClick(object sender, EventArgs e)
         {
@@ -81,16 +119,15 @@ namespace Domotica
 
             // Schedule the alarm!
             var am = (AlarmManager)GetSystemService(AlarmService);
-            am.SetRepeating(AlarmType.ElapsedRealtimeWakeup,
-                    SystemClock.ElapsedRealtime() + 15 * 1000,
-                    15 * 1000,
-                    source);
+            am.SetRepeating(AlarmType.ElapsedRealtimeWakeup, SystemClock.ElapsedRealtime() + 15 * 1000, 15 * 1000,  source);
 
             // Tell the user about what we did.
             if (repeating != null)
+            { 
                 repeating.Cancel();
             Toast.MakeText(this, "StartRepeatingClick ", ToastLength.Short).Show(); ;
             repeating.Show();
+            }
         }
 
         void StopRepeatingClick(object sender, EventArgs e)
@@ -113,19 +150,22 @@ namespace Domotica
     }
 }
 [BroadcastReceiver(Enabled = true)]
-public class OneShotAlarm : BroadcastReceiver
-{
-    public override void OnReceive(Context context, Intent intent)
+    public class OneShotAlarm : BroadcastReceiver
     {
-        //Toast.MakeText(this, Resource.String.ip_port_text, ToastLength.Short).Show();
-        Toast.MakeText(context, "Onreceive activated oneshot", ToastLength.Short).Show();
+        public override void OnReceive(Context context, Intent intent)
+        {
+            //Toast.MakeText(this, Resource.String.ip_port_text, ToastLength.Short).Show();
+        Toast.MakeText(context, "Onreceive activated oneshot", ToastLength.Short).Show(); 
+        }
     }
-}
 
+
+[BroadcastReceiver(Enabled = true)]
 public class RepeatingAlarm : BroadcastReceiver
-{
-    public override void OnReceive(Context context, Intent intent)
     {
+        public override void OnReceive(Context context, Intent intent)
+        {
         Toast.MakeText(context, "Onreceive activated repeating", ToastLength.Short).Show(); ;
     }
 }
+
