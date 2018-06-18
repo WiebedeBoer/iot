@@ -29,11 +29,14 @@ namespace Domotica
         //  Button stoprepeatingAlarm;
         // AlarmReceiver alarmy = new AlarmReceiver();
 
+        OneShotAlarm alarm; 
+       
+     
         protected override void OnCreate(Bundle savedInstanceState)
         {
             base.OnCreate(savedInstanceState);
             SetContentView(Resource.Layout.my_activity);
-
+           // alarm = new OneShotAlarm(this);
 
             // Create your application here
             FindViewById<Button>(Resource.Id.oneshotAlarm).Click += OneShotClick;
@@ -45,9 +48,9 @@ namespace Domotica
            timeselector = FindViewById<TimePicker>(Resource.Id.timePicker);
 
             timertext = FindViewById<EditText>(Resource.Id.timertext);
+            PowerManager pw = (PowerManager)GetSystemService(PowerService);
 
 
-        
         }
 
 
@@ -59,38 +62,32 @@ namespace Domotica
             // AndroidManifest.xml) instantiated and called, and then create an
             // IntentSender to have the intent executed as a broadcast.
 
-            int timeHour = Convert.ToInt32(timeselector.CurrentHour);
-            int timeMinutes = Convert.ToInt32(timeselector.CurrentMinute);
-
-            int timeHour2 = Convert.ToInt32(timeselector.Hour);
-            int timeMinutes2 = Convert.ToInt32(timeselector.Minute);
+            int timeHour = Convert.ToInt32(timeselector.Hour);
+            int timeMinutes = Convert.ToInt32(timeselector.Minute);        
 
             long q = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
 
             AlarmManager am = (AlarmManager)GetSystemService(AlarmService);
-           Intent oneshotIntent = new Intent(this, typeof(OneShotAlarm));
+            Intent oneshotIntent = new Intent(this, typeof(OneShotAlarm));
             PendingIntent source = PendingIntent.GetBroadcast(this, 0, oneshotIntent, 0);
             // my code
-          //  long pp = Convert.ToInt64(timertext.Text);
-          //  AlarmManager.AlarmClockInfo p = new AlarmManager.AlarmClockInfo(pp ,source);
-
+            //  long pp = Convert.ToInt64(timertext.Text);
+            //  Alarm     PowerManager pw = (PowerManager)GetSystemService(PowerService);Manager.AlarmClockInfo p = new AlarmManager.AlarmClockInfo(pp ,source);
+         
             // end my code
             // Schedule the alarm for 10 seconds from now!
-            
+
             //   am.Set(AlarmType.ElapsedRealtime, SystemClock.ElapsedRealtime() + 10 * 1000, source);
             long Currenttimemilliseconds = DateTime.Now.Ticks / TimeSpan.TicksPerMillisecond;
        
             //am.SetAlarmClock(p,source);
 
+         
 
 
             Java.Util.Calendar calendar = Java.Util.Calendar.Instance;
             calendar.Set(CalendarField.HourOfDay, timeHour);
             calendar.Set(CalendarField.Minute, timeMinutes);
-            Console.WriteLine();
-           // am.SetRepeating(AlarmType.RtcWakeup, calendar.TimeInMillis, AlarmManager.IntervalDay, source);
-
-
             am.Set(AlarmType.RtcWakeup, calendar.TimeInMillis, source);
 
             // Tell the user about what we did.
@@ -147,25 +144,84 @@ namespace Domotica
             Toast.MakeText(this, "StopRepeatingClick", ToastLength.Short).Show(); ;
             repeating.Show();
         }
+
+        public  void WakeMeUpInside()
+        {
+            Console.WriteLine();
+        }
     }
-}
-[BroadcastReceiver(Enabled = true)]
+    [BroadcastReceiver(Enabled = true)]
     public class OneShotAlarm : BroadcastReceiver
     {
+        Alarmcontroller activity; // reference to the main activity
+
+        /*
+        public OneShotAlarm(Alarmcontroller mawmaw) {
+            activity = mawmaw;
+        }
+
+        public  OneShotAlarm()        
+        {
+            // Default constructor needed for Xamarin Forms bug?
+            throw new Exception("This constructor should not actually ever be used");
+        }
+        */
+
+      
+
+        //             ActivityManager am = (ActivityManager)context.getSystemService(Context.ACTIVITY_SERVICE);
+        //    ComponentName cn = am.getRunningTasks(1).get(0).topActivity;
+
         public override void OnReceive(Context context, Intent intent)
         {
+            //testcode
+         //   context.SendBroadcast(new Intent("FUCKFUCK"));
+            PowerManager pw = (PowerManager)context.GetSystemService(Context.PowerService);
+            PowerManager.WakeLock wl = pw.NewWakeLock(WakeLockFlags.Full, "Tagged");
+            
+            //pw.GoToSleep(10000);
+            //wl.Release
+            wl.Acquire();
+            // saving as var for debugging
+            // var c = context;
+            //  var i = intent;
+            //var activity = (Activity)Forms.Context;
+            // context.StartActivity(intent);
+            if (context is Alarmcontroller)
+            {
+                activity = (Alarmcontroller)context;
+            }
+            else
+            {
+                // Try to make a new AlarmController
+
+                //Intent intent = new Intent(this, typeof(Alarmcontroller));
+                activity = new Alarmcontroller();
+                //activity.OnCreate();
+              //  activity.WakeMeUpInside();
+            }
+            //intent.
             //Toast.MakeText(this, Resource.String.ip_port_text, ToastLength.Short).Show();
-        Toast.MakeText(context, "Onreceive activated oneshot", ToastLength.Short).Show(); 
+            Toast.MakeText(context, "Onreceive activated oneshot", ToastLength.Short).Show();
+            //activity.WakeMeUpInside();
         }
     }
 
 
-[BroadcastReceiver(Enabled = true)]
-public class RepeatingAlarm : BroadcastReceiver
+    [BroadcastReceiver(Enabled = true)]
+    public class RepeatingAlarm : BroadcastReceiver
     {
+   
+
         public override void OnReceive(Context context, Intent intent)
         {
-        Toast.MakeText(context, "Onreceive activated repeating", ToastLength.Short).Show(); ;
-    }
-}
+            Alarmcontroller q = new Alarmcontroller();
+           
 
+            //  pw.WakeUp(1);
+            Toast.MakeText(context, "Onreceive activated repeating", ToastLength.Short).Show(); ;
+        }
+    }
+
+
+}
