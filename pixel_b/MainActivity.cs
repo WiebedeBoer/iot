@@ -45,8 +45,6 @@ namespace b_opdracht
         //socket connect
         Button autoConnect;
 
-        //UpdateConnectionState(4, "Disconnected");
-
         //Timer timerClock, timerSockets;             // Timers   
         Socket socket = null;                       // Socket   
         List<Tuple<string, TextView>> commandList = new List<Tuple<string, TextView>>();  // List for commands and response places on UI
@@ -77,6 +75,7 @@ namespace b_opdracht
 
             //autoconnect
             autoConnect = FindViewById<Button>(Resource.Id.autoConnect);
+            autoConnect.Click += autoConnect_Click;
             textViewServerConnect = FindViewById<TextView>(Resource.Id.textViewServerConnect);
 
             UpdateConnectionState(4, "Disconnected");
@@ -119,16 +118,19 @@ namespace b_opdracht
                 };
             }
 
-            //auto connect
-            if (autoConnect != null)
-            {
-                autoConnect.Click += (sender, e) =>
-                {
-                    AutoConnect();
-                };
-            }
+
 
         }
+
+
+                    //auto connect
+        public void autoConnect_Click(object sender, EventArgs e)
+            {
+                //autoConnect.Click += (sender, e) =>
+                //{
+                    AutoConnect();
+                //};
+            }
 
 
         private void BtnCancel_Click(object sender, EventArgs e)
@@ -277,7 +279,21 @@ namespace b_opdracht
             MenuInflater.Inflate(Resource.Menu.menu, menu);
             return base.OnPrepareOptionsMenu(menu);
         }
-        
+
+        //Executes an action when a menu button is pressed.
+        public override bool OnOptionsItemSelected(IMenuItem item)
+        {
+            switch (item.ItemId)
+            {
+                case Resource.Id.exit:
+                    //Force quit the application.
+                    System.Environment.Exit(0);
+                    return true;
+                case Resource.Id.abort:
+                    return true;
+            }
+            return base.OnOptionsItemSelected(item);
+        }
 
         //Check if the entered IP address is valid.
         private bool CheckValidIpAddress(string ip)
@@ -318,17 +334,26 @@ namespace b_opdracht
         /// </summary>
         void AutoConnect()
         {
-            for (int i = 2; i < 256; i++)
+            try
             {
-                string p = "192.168.1." + i;
-                ConnectSocket(p, "3300");
-                if (textViewServerConnect.Text == "Connected")
+                for (int i = 2; i < 256; i++)
                 {
-                    return;
-                }
+                    string p = "192.168.1." + i;
+                    ConnectSocket(p, "3300");
+                    if (textViewServerConnect.Text == "Connected")
+                    {
+                        return;
+                    }
 
+                }
+                //ConnectSocket("192.168.1.2","3300");
             }
-            //ConnectSocket("192.168.1.2","3300");
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+            }
+
+
 
         }
         
