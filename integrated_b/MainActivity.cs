@@ -17,7 +17,7 @@ using System.Threading.Tasks;
 
 namespace b_opdracht
 {
-    [Activity(Label = "b_opdracht", MainLauncher = true)]
+    [Activity(Label = "Eerste Hulp Bij Opstaan", MainLauncher = true)]
     public class MainActivity : Activity
     {
         //variables
