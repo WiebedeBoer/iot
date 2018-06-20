@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-  <string name="app_name">Eerste Hulp Bij Opstaan</string>
-  <string name="buttonAuto">Auto Connect</string>
-  <string name="exit">Exit</string>
-  <string name="abort">Abort</string>
-  <string name="arduino_server_connect">Not connected</string>
-</resources>
