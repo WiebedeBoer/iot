@@ -40,10 +40,12 @@ namespace b_opdracht
         Timer timer;
         private EditText tijd;
         private string time;
+        TextView textViewServerConnect;
 
-        //UpdateConnectionState(4, "Disconnected");
+        //socket connect
+        Button autoConnect;
 
-        Timer timerClock, timerSockets;             // Timers   
+        //Timer timerClock, timerSockets;             // Timers   
         Socket socket = null;                       // Socket   
         List<Tuple<string, TextView>> commandList = new List<Tuple<string, TextView>>();  // List for commands and response places on UI
         int listIndex = 0;
@@ -70,6 +72,13 @@ namespace b_opdracht
             btnCancel.Click += BtnCancel_Click;
             btnset.Click += Set_Click;
             tijd = FindViewById<EditText>(Resource.Id.tijd);
+
+            //autoconnect
+            autoConnect = FindViewById<Button>(Resource.Id.autoConnect);
+            autoConnect.Click += autoConnect_Click;
+            textViewServerConnect = FindViewById<TextView>(Resource.Id.textViewServerConnect);
+
+            UpdateConnectionState(4, "Disconnected");
 
             //koffie keuze aan of uit
             if (checkbox1.Checked == true)
@@ -108,7 +117,20 @@ namespace b_opdracht
                     socket.Send(Encoding.ASCII.GetBytes("$l---------#")); //send l
                 };
             }
+
+
+
         }
+
+
+                    //auto connect
+        public void autoConnect_Click(object sender, EventArgs e)
+            {
+                //autoConnect.Click += (sender, e) =>
+                //{
+                    AutoConnect();
+                //};
+            }
 
 
         private void BtnCancel_Click(object sender, EventArgs e)
@@ -144,6 +166,7 @@ namespace b_opdracht
             }
             else
             {
+                //als countdown afgelopen is
                 RunOnUiThread(() => {
                     count = Convert.ToInt32(time); // Reset count variable
                     Toast.MakeText(this, "Hello", ToastLength.Short).Show();
@@ -153,6 +176,13 @@ namespace b_opdracht
                     int minutes = countdown / 60;
                     txtCountdown.Text = minutes + ":" + seconds;
                     btnset.Enabled = true;
+
+                    //toggle koffiezetapparaat
+                    if (choice.koffieAan ==true)
+                    {
+                        socket.Send(Encoding.ASCII.GetBytes("$k---------#"));
+                    }
+                    
                 });
             }
         }
@@ -211,12 +241,12 @@ namespace b_opdracht
                         if (socket.Connected)
                         {
                             UpdateConnectionState(2, "Connected");
-                            timerSockets.Enabled = true;                //Activate timer for communication with Arduino     
+                            //timerSockets.Enabled = true;                //Activate timer for communication with Arduino     
                         }
                     }
                     catch (Exception exception)
                     {
-                        timerSockets.Enabled = false;
+                        //timerSockets.Enabled = false;
                         if (socket != null)
                         {
                             socket.Close();
@@ -228,7 +258,7 @@ namespace b_opdracht
                 else // disconnect socket
                 {
                     socket.Close(); socket = null;
-                    timerSockets.Enabled = false;
+                    //timerSockets.Enabled = false;
                     UpdateConnectionState(4, "Disconnected");
                 }
             });
@@ -246,7 +276,7 @@ namespace b_opdracht
             base.OnDestroy();
         }
 
-        /*
+        
         //Prepare the Screen's standard options menu to be displayed.
         public override bool OnPrepareOptionsMenu(IMenu menu)
         {
@@ -256,7 +286,21 @@ namespace b_opdracht
             MenuInflater.Inflate(Resource.Menu.menu, menu);
             return base.OnPrepareOptionsMenu(menu);
         }
-        */
+
+        //Executes an action when a menu button is pressed.
+        public override bool OnOptionsItemSelected(IMenuItem item)
+        {
+            switch (item.ItemId)
+            {
+                case Resource.Id.exit:
+                    //Force quit the application.
+                    System.Environment.Exit(0);
+                    return true;
+                case Resource.Id.abort:
+                    return true;
+            }
+            return base.OnOptionsItemSelected(item);
+        }
 
         //Check if the entered IP address is valid.
         private bool CheckValidIpAddress(string ip)
@@ -291,52 +335,63 @@ namespace b_opdracht
             else return false;
         }
 
-        /*
+        
         /// <summary>
         /// Tries all IP adresses in the 192.168.1 range on port 3300 , stops when it connects
         /// </summary>
         void AutoConnect()
         {
-            for (int i = 2; i < 256; i++)
+            try
             {
-                string p = "192.168.1." + i;
-                ConnectSocket(p, "3300");
-                if (textViewServerConnect.Text == "Connected")
+                for (int i = 2; i < 256; i++)
                 {
-                    return;
-                }
+                    string p = "192.168.1." + i;
+                    ConnectSocket(p, "3300");
+                    if (textViewServerConnect.Text == "Connected")
+                    {
+                        return;
+                    }
 
+                }
+                //ConnectSocket("192.168.1.2","3300");
             }
-            //ConnectSocket("192.168.1.2","3300");
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+            }
+
+
 
         }
-        */
-
+        
+        
         //Update connection state label (GUI).
         public void UpdateConnectionState(int state, string text)
         {
             // connectButton
             string butConText = "Connect";  // default text
-            bool butConEnabled = true;      // default state
+            //bool butConEnabled = true;      // default state
             Color color = Color.Red;        // default color
             // pinButton
-            bool butPinEnabled = false;     // default state 
+            //bool butPinEnabled = false;     // default state 
 
             //Set "Connect" button label according to connection state.
             if (state == 1)
             {
                 butConText = "Please wait";
                 color = Color.Orange;
-                butConEnabled = false;
+                //butConEnabled = false;
             }
             else
             if (state == 2)
             {
                 butConText = "Disconnect";
                 color = Color.Green;
-                butPinEnabled = true;
+                //butPinEnabled = true;
             }
-            /*
+            
+
+            
             //Edit the control's properties on the UI thread
             RunOnUiThread(() =>
             {
@@ -344,13 +399,13 @@ namespace b_opdracht
                 if (butConText != null)  // text existst
                 {
 
-                    buttonConnect.Text = butConText;
+                    autoConnect.Text = butConText;
                     textViewServerConnect.SetTextColor(color);
-                    buttonConnect.Enabled = butConEnabled;
+                    //buttonConnect.Enabled = butConEnabled;
                 }
-                buttonChangePinState.Enabled = butPinEnabled;
+                //buttonChangePinState.Enabled = butPinEnabled;
             });
-            */
+            
         }
 
 
