@@ -8,6 +8,8 @@ EthernetServer server(3300);
 bool connected = false;
 
 int WaterSensor = 0; //Watersensor variable
+bool GenoegWater;
+
 
 void setup()
 {
@@ -37,30 +39,30 @@ void loop()
 client.print(WaterSensor);
       delay(150);
 
-
+      //drempel waardes
   if(WaterSensor <300){
-
-
-    client.println("Bijvullen");
-    delay(1000);
+    GenoegWater = false;
   }
-
-  if(WaterSensor >300){
-
-    client.println("Genoeg water");
-    delay(1000);
+  else{
+    GenoegWater = true;
   }
-
-
 
     case 'w': //sensor waardes van watersensor naar app
             intToCharBuf(WaterSensor, buf, 4);                // convert to charbuffer
-            if (bufferGlobal != 0)
-            {
-              sensorReadInterval = 1000 * bufferGlobal.toInt();
+            
+           if(GenoegWater = true){  
+            client.println("1");
             }
+
+            else(GenoegWater = false){
+
+              client.println("0");
+            }
+
+
+            
             server.write(buf, 4);                             // response is always 4 chars (\n included)
-            Serial.print("Sensor: Case A "); Serial.println(buf);
+            Serial.print("Waterniveau Status: "); Serial.println(buf);
 
 
     }
