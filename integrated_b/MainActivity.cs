@@ -6,6 +6,7 @@ using System.Timers;
 using Android.App;
 using Android.Content;
 using Android.Runtime;
+using b_opdracht;
 using Android.Views;
 using Android.Widget;
 using Android.OS;
@@ -41,6 +42,8 @@ namespace b_opdracht
         private EditText tijd;
         private string time;
         TextView textViewServerConnect;
+        //snooze stuff
+        private Button snooze;
 
         //socket connect
         Button autoConnect;
@@ -72,6 +75,11 @@ namespace b_opdracht
             btnCancel.Click += BtnCancel_Click;
             btnset.Click += Set_Click;
             tijd = FindViewById<EditText>(Resource.Id.tijd);
+
+            //snooze stuff
+            snooze = FindViewById<Button>(Resource.Id.snooze);
+            snooze.Click += snooze_Click;
+            snooze.Enabled = false;
 
             //autoconnect
             autoConnect = FindViewById<Button>(Resource.Id.autoConnect);
@@ -151,6 +159,20 @@ namespace b_opdracht
             count = 0;
         }
 
+        private void snooze_Click(object sender, EventArgs e)
+        {
+            timer.Stop();
+            snooze.Enabled = false;
+            btnCancel.Enabled = true;
+            time = tijd.Text;
+            timer = new Timer();
+            timer.Interval = 1000;
+            timer.Elapsed += Timer_Elapsed; // 1 seconds
+            timer.Start();
+            btnset.Enabled = false;
+            count = 0;
+        }
+
         private void Timer_Elapsed(object sender, ElapsedEventArgs e)
         {
             if (count < Convert.ToInt32(time))
@@ -176,6 +198,7 @@ namespace b_opdracht
                     int minutes = countdown / 60;
                     txtCountdown.Text = minutes + ":" + seconds;
                     btnset.Enabled = true;
+                    snooze.Enabled = true;
 
                     //toggle koffiezetapparaat
                     if (choice.koffieAan ==true)
