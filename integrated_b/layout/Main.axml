@@ -3,28 +3,6 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
-    <Button
-        android:text="Toggle Koffie"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/ToggleKoffie" />
-    <Button
-        android:text="Toggle Licht"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/ToggleLicht" />
-    <CheckBox
-        android:text="Koffie"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/checkBox1"
-        android:checked="true" />
-    <CheckBox
-        android:text="Licht"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/checkBox2"
-        android:checked="true" />
     <TextView
         android:text="Android TimerTask"
         android:textAppearance="?android:attr/textAppearanceLarge"
@@ -60,8 +38,66 @@
         android:gravity="center"
         android:id="@+id/txtCountdown" />
     <Button
+        android:text="snooze"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/snooze" />
+    <Button
         android:text="Cancel"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/btnCancel" />
+    <RelativeLayout
+        android:orientation="horizontal"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/relativeLayout1">
+        <Button
+            android:text="Toggle Koffie"
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/btnCancel"
+            android:layout_alignParentLeft="true"
+            android:id="@+id/ToggleKoffie" />
+        <Button
+            android:text="Toggle Licht"
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/btnCancel"
+            android:layout_alignParentRight="true"
+            android:id="@+id/ToggleLicht" />
+        <CheckBox
+            android:text="Koffie"
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_below="@id/ToggleKoffie"
+            android:id="@+id/checkBox1"
+            android:checked="true" />
+        <CheckBox
+            android:text="Licht"
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_below="@id/ToggleLicht"
+            android:id="@+id/checkBox2"
+            android:checked="true" />
+        <Button
+            android:text="@string/buttonAuto"
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
+            android:id="@+id/autoConnect"
+            android:layout_alignParentLeft="true"
+            android:layout_below="@id/checkBox1"
+            android:backgroundTint="#add8e6ff" />
+        <TextView
+            android:text="@string/arduino_server_connect"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
+            android:id="@+id/textViewServerConnect"
+            android:layout_alignParentRight="true"
+            android:layout_below="@id/checkBox2"
+            android:textColor="@android:color/holo_red_dark" />
+    </RelativeLayout>
 </LinearLayout>
