@@ -1,0 +1,13 @@
+public void CheckWater(string result)
+{
+    if (result == "0")
+    {
+        //als er niet genoeg water in zit
+        //checkbox.enable = false;
+    }
+    else if (result == "1")
+    {
+        // als er wel genoeg water in zit
+        //checkbox.enable = true;
+    }
+}
