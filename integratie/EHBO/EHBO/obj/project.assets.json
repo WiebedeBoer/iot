@@ -1,0 +1,49 @@
+{
+  "version": 3,
+  "targets": {
+    "MonoAndroid,Version=v8.1": {}
+  },
+  "libraries": {},
+  "projectFileDependencyGroups": {
+    "MonoAndroid,Version=v8.1": []
+  },
+  "packageFolders": {
+    "C:\\Users\\Redmar\\.nuget\\packages\\": {},
+    "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackagesFallback\\": {}
+  },
+  "project": {
+    "version": "1.0.0",
+    "restore": {
+      "projectUniqueName": "C:\\Users\\Redmar\\Desktop\\SCHOOL ICT\\Periode 4\\integratie\\EHBO\\EHBO\\EHBO.csproj",
+      "projectName": "EHBO",
+      "projectPath": "C:\\Users\\Redmar\\Desktop\\SCHOOL ICT\\Periode 4\\integratie\\EHBO\\EHBO\\EHBO.csproj",
+      "packagesPath": "C:\\Users\\Redmar\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\Redmar\\Desktop\\SCHOOL ICT\\Periode 4\\integratie\\EHBO\\EHBO\\obj\\",
+      "projectStyle": "PackageReference",
+      "skipContentFileWrite": true,
+      "fallbackFolders": [
+        "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackagesFallback\\"
+      ],
+      "configFilePaths": [
+        "C:\\Users\\Redmar\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config",
+        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.Fallback.config"
+      ],
+      "originalTargetFrameworks": [
+        "monoandroid81"
+      ],
+      "sources": {
+        "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+        "https://api.nuget.org/v3/index.json": {}
+      },
+      "frameworks": {
+        "monoandroid81": {
+          "projectReferences": {}
+        }
+      }
+    },
+    "frameworks": {
+      "monoandroid81": {}
+    }
+  }
+}
