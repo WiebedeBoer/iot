@@ -1,5 +1,4 @@
-﻿//testsj
-using System;
+﻿using System;
 using System.Text;
 using System.Net;
 using System.Net.Sockets;
@@ -18,6 +17,7 @@ using Android.Graphics;
 using System.Threading.Tasks;
 using Android.Media;
 using Android.Net;
+//using Android.Util;
 
 namespace EHBO
 {
@@ -47,6 +47,9 @@ namespace EHBO
         TextView textViewServerConnect;
         //snooze stuff
         private Button snooze;
+
+        //splash stuff
+        //static readonly string TAG = "X:" + typeof(MainActivity).Name;
 
         //socket connect
         Button autoConnect;
@@ -96,6 +99,10 @@ namespace EHBO
             textViewServerConnect = FindViewById<TextView>(Resource.Id.textViewServerConnect);
 
             UpdateConnectionState(4, "Disconnected");
+
+            //splash stuff
+            //Log.Debug(TAG, "MainActivity is loaded.");
+
 
             //koffie keuze aan of uit
             if (checkbox1.Checked == true)
